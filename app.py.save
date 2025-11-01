@@ -1,0 +1,41 @@
+from flask import Flask, request, jsonify, render_template
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    try:
+        data = request.get_json(force=True)
+        print("Received data:", data)  # <-- shows up in your terminal
+
+        room_type = data.get("room_type", "").lower()
+        color_preference = data.get("color_preference", "").lower()
+        belief = data.get("belief", "").lower()
+
+        if not (room_type and color_preference and belief):
+            return jsonify({"recommendation": "⚠️ Please fill in all fields before submitting."})
+
+        if room_type == "living room":
+            rec = f"Use {color_preference} shades with cozy sofas and warm lighting. A {belief} layout enhances harmony."
+        elif room_type == "bedroom":
+            rec = f"Opt for {color_preference} tones to create a peaceful space. {belief.capitalize()} positioning promotes good rest."
+        elif room_type == "kitchen":
+            rec = f"Try {color_preference} hues to encourage freshness and energy. A {belief} setup supports prosperity."
+        elif room_type == "office":
+            rec = f"Decorate with {color_preference} colors for focus and creativity. Facing {belief} boosts productivity."
+        elif room_type == "pooja room":
+            rec = f"Keep {color_preference} decor with ample light. Following {belief} directions ensures spiritual balance."
+        else:
+            rec = "Please select valid options for all fields."
+
+        return jsonify({"recommendation": rec})
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"recommendation": "Server error occurred."}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)

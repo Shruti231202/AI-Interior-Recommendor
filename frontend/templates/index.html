@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Interior Design Recommender</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f9d423, #ff4e50);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #444;
+      display: block;
+      text-align: left;
+      margin-top: 15px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    select:focus, input:focus {
+      border-color: #ff4e50;
+      box-shadow: 0 0 8px rgba(255, 78, 80, 0.3);
+    }
+
+    button {
+      background: linear-gradient(45deg, #ff4e50, #f9d423);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fef9e7;
+      border-left: 5px solid #ff4e50;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #333;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🪴 AI Interior Recommender</h1>
+
+    <label>Room Type:</label>
+    <select id="room_type">
+      <option value="">-- Select --</option>
+      <option>Living Room</option>
+      <option>Bedroom</option>
+      <option>Kitchen</option>
+      <option>Office</option>
+      <option>Pooja Room</option>
+    </select>
+
+    <label>Color Preference:</label>
+    <input type="text" id="color_preference" placeholder="e.g., warm, 
+pastel, blue" />
+
+    <label>Belief / Directional Preference:</label>
+    <input type="text" id="belief" placeholder="e.g., east-facing, 
+vastu-based" />
+
+    <button onclick="getRecommendation()">Get Recommendation 🚀</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function getRecommendation() {
+      const room_type = document.getElementById('room_type').value;
+      const color_preference = 
+document.getElementById('color_preference').value;
+      const belief = document.getElementById('belief').value;
+      const resultDiv = document.getElementById('result');
+
+      resultDiv.style.display = "none";
+      resultDiv.textContent = "";
+
+      const response = await fetch('http://127.0.0.1:5000/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ room_type, color_preference, belief })
+      });
+
+      const data = await response.json();
+      resultDiv.textContent = data.recommendation;
+      resultDiv.style.display = "block";
+    }
+  </script>
+</body>
+</html>
+
