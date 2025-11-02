@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+import os 
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -36,7 +37,7 @@ def recommend():
         print("Error:", e)
         return jsonify({"recommendation": "Server error occurred."}), 500
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     from os import environ
-    app.run(host="0.0.0.0", port=int(environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)),debug=True)
 
